@@ -1,0 +1,4 @@
+interface:
+  display_name: "スクリーンショット・マニュアル作成"
+  short_description: "画面画像を注釈付きの検証済みHTMLマニュアルへ変換します"
+  default_prompt: "$screenshot-manual-builder を使って、スクリーンショットフォルダから監査済みのHTMLマニュアルを作成してください。"

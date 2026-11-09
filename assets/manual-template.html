@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="{{LANG}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{TITLE}}</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --blue: #1556a8;
+      --blue-soft: #eef5ff;
+      --ink: #172033;
+      --muted: #5f6b7a;
+      --line: #dce3ec;
+      --paper: #ffffff;
+      --canvas: #f4f7fb;
+      --red: #d7263d;
+      --shadow: 0 12px 34px rgba(28, 45, 72, .08);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--canvas);
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", "Segoe UI", sans-serif;
+      line-height: 1.72;
+    }
+    a { color: var(--blue); text-underline-offset: .18em; }
+    a:focus-visible { outline: 3px solid #f0b429; outline-offset: 3px; border-radius: 4px; }
+    header {
+      padding: clamp(2rem, 5vw, 4.5rem) max(1.25rem, calc((100vw - 1240px) / 2));
+      color: white;
+      background: linear-gradient(135deg, #0c438b, #1768c7);
+    }
+    header h1 { max-width: 18ch; margin: 0; font-size: clamp(2rem, 5vw, 4rem); line-height: 1.15; }
+    header .lead { max-width: 68ch; margin: 1rem 0 0; font-size: clamp(1rem, 2vw, 1.25rem); }
+    .notice {
+      max-width: 1240px;
+      margin: 1.1rem auto 0;
+      padding: .9rem 1rem;
+      color: #33220a;
+      background: #fff8df;
+      border: 1px solid #ead58c;
+      border-radius: 12px;
+    }
+    .shell { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 1.5rem; max-width: 1320px; margin: 0 auto; padding: 1.5rem; }
+    .toc {
+      position: sticky;
+      top: 1rem;
+      align-self: start;
+      max-height: calc(100vh - 2rem);
+      overflow: auto;
+      padding: 1rem;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+    .toc strong { display: block; margin-bottom: .7rem; color: var(--blue); }
+    .toc a { display: block; padding: .38rem .5rem; border-radius: 7px; text-decoration: none; }
+    .toc a:hover { background: var(--blue-soft); }
+    main { min-width: 0; }
+    .chapter { margin-bottom: 2rem; }
+    .chapter > h2 { margin: .25rem 0 1rem; color: var(--blue); font-size: clamp(1.35rem, 3vw, 2rem); }
+    .card {
+      display: grid;
+      grid-template-columns: minmax(0, 1.16fr) minmax(280px, .84fr);
+      gap: 1.4rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      scroll-margin-top: 1rem;
+    }
+    .visual {
+      position: relative;
+      align-self: start;
+      margin: 0;
+      overflow: hidden;
+      background: #e8edf4;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+    }
+    .visual img { display: block; width: 100%; height: auto; object-fit: contain; }
+    .hotspot {
+      position: absolute;
+      left: calc(var(--x) * 1%);
+      top: calc(var(--y) * 1%);
+      width: calc(var(--w) * 1%);
+      height: calc(var(--h) * 1%);
+      border: clamp(2px, .3vw, 4px) solid var(--red);
+      border-radius: 7px;
+      box-shadow: 0 0 0 2px rgba(255,255,255,.9), 0 3px 10px rgba(0,0,0,.22);
+      pointer-events: none;
+    }
+    .hotspot b {
+      position: absolute;
+      left: -.65rem;
+      top: -.8rem;
+      display: grid;
+      place-items: center;
+      min-width: 1.65rem;
+      height: 1.65rem;
+      padding: 0 .25rem;
+      color: white;
+      background: var(--red);
+      border: 2px solid white;
+      border-radius: 999px;
+      font: 700 .85rem/1 sans-serif;
+      box-shadow: 0 2px 6px rgba(0,0,0,.25);
+    }
+    .details { min-width: 0; padding: .25rem .25rem .5rem; }
+    .number { display: inline-flex; align-items: center; min-width: 2.5rem; padding: .12rem .65rem; color: white; background: var(--blue); border-radius: 999px; font-weight: 800; }
+    .details h3 { margin: .55rem 0 1rem; font-size: clamp(1.25rem, 2.6vw, 1.75rem); line-height: 1.3; }
+    .details h4 { margin: 1rem 0 .25rem; color: var(--blue); font-size: .95rem; }
+    .details p, .details ol, .details ul { margin: .25rem 0 .75rem; }
+    .callouts { padding-left: 0; list-style: none; }
+    .callouts li { display: grid; grid-template-columns: 1.7rem 1fr; gap: .45rem; align-items: start; margin: .42rem 0; }
+    .callouts b { display: grid; place-items: center; width: 1.55rem; height: 1.55rem; color: white; background: var(--red); border-radius: 999px; font-size: .8rem; }
+    .sources { margin-top: 2rem; padding: 1.25rem; background: var(--paper); border: 1px solid var(--line); border-radius: 16px; }
+    footer { padding: 2rem 1.25rem 3rem; color: var(--muted); text-align: center; }
+    @media (max-width: 860px) {
+      html { scroll-behavior: auto; }
+      .shell { display: block; padding: .9rem; }
+      .toc { position: static; max-height: none; margin-bottom: 1.2rem; }
+      .card { grid-template-columns: 1fr; padding: .75rem; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    @media print {
+      body { background: white; font-size: 10pt; }
+      header { color: black; background: white; padding: 1rem 0; }
+      .shell { display: block; max-width: none; padding: 0; }
+      .toc { display: none; }
+      .card { box-shadow: none; break-inside: avoid; }
+      a { color: black; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>{{TITLE}}</h1>
+    <p class="lead">{{LEAD}}</p>
+  </header>
+  {{NOTICE}}
+  <div class="shell">
+    <nav class="toc" aria-label="目次"><strong>目次</strong>{{NAV}}</nav>
+    <main>{{CONTENT}}{{SOURCES}}</main>
+  </div>
+  <footer>画面や提供条件は更新される場合があります。重要な操作は対象と影響を確認してから実行してください。</footer>
+</body>
+</html>
+
